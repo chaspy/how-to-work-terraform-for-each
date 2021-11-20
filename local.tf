@@ -1,0 +1,5 @@
+locals {
+  redash = {
+    namesppace = "redash"
+  }
+}
