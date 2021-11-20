@@ -1,5 +1,5 @@
 locals {
   redash = {
-    namesppace = "redash"
+    namespace = "redash"
   }
 }
