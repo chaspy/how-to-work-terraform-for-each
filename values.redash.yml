@@ -1,0 +1,7 @@
+redash:
+  dateFormat: "YYYY/MM/DD"
+  versionCheck: false
+postgresql:
+  enabled: false
+redis:
+  enabled: true
