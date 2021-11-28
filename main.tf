@@ -1,8 +1,8 @@
 terraform {
   required_providers {
-    docker = {
-      source  = "kreuzwerker/docker"
-      version = "2.15.0"
+    helm = {
+      source  = "hashicorp/helm"
+      version = "2.3.0"
     }
   }
 }
@@ -18,11 +18,39 @@ locals {
       image = "debian"
     },
   ]
+
+  lists = []
 }
 
-resource "docker_container" "this" {
-  # for_each = local.images ここにmapのlistを渡したいがエラーになる
-  for_each = { for i in local.images : i.name => i } # こう書くのが正しい
-  name     = each.value.name
-  image    = each.value.image
+resource "helm_release" "example" {
+  name       = "my-redis-release"
+  repository = "https://charts.bitnami.com/bitnami"
+  chart      = "redis"
+  version    = "14.0.1"
+
+  #  values = [
+  #    "${file("values.yaml")}"
+  #  ]
+
+  dynamic set {
+    for_each = toset(concat([
+      {
+        name  = "cluster.enabled"
+        value = "true"
+      },
+      {
+        name  = "metrics.enabled"
+        value = "true"
+      },
+      {
+        name  = "service.annotations.prometheus\\.io/port"
+        value = "9127"
+        type  = "string"
+    }], []))
+
+    content {
+      name  = set.value.name
+      value = set.value.value
+    }
+  }
 }
