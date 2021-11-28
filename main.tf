@@ -9,8 +9,14 @@ terraform {
 
 locals {
   images = [
-    { name = "foo", image = "alpine" },
-    { name = "bar", image = "debian" },
+    {
+      name  = "foo"
+      image = "alpine"
+    },
+    {
+      name  = "bar",
+      image = "debian"
+    },
   ]
 }
 
