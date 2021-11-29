@@ -1,56 +1,29 @@
-terraform {
-  required_providers {
-    helm = {
-      source  = "hashicorp/helm"
-      version = "2.3.0"
-    }
-  }
-}
+data "aws_availability_zones" "all" {}
 
-locals {
-  images = [
-    {
-      name  = "foo"
-      image = "alpine"
-    },
-    {
-      name  = "bar",
-      image = "debian"
-    },
-  ]
+resource "aws_autoscaling_group" "example" {
+  launch_configuration = aws_launch_configuration.example.id
+  availability_zones   = data.aws_availability_zones.all.names
 
-  lists = []
-}
+  min_size = 2
+  max_size = 2
 
-resource "helm_release" "example" {
-  name       = "my-redis-release"
-  repository = "https://charts.bitnami.com/bitnami"
-  chart      = "redis"
-  version    = "14.0.1"
-
-  #  values = [
-  #    "${file("values.yaml")}"
-  #  ]
-
-  dynamic set {
-    for_each = toset(concat([
-      {
-        name  = "cluster.enabled"
-        value = "true"
-      },
-      {
-        name  = "metrics.enabled"
-        value = "true"
-      },
-      {
-        name  = "service.annotations.prometheus\\.io/port"
-        value = "9127"
-        type  = "string"
-    }], []))
-
+  # Use for_each to loop over var.custom_tags
+  dynamic "tag" {
+    for_each = var.custom_tags
     content {
-      name  = set.value.name
-      value = set.value.value
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
     }
   }
 }
+
+resource "aws_launch_configuration" "example" {
+  image_id      = "ami-07ebfd5b3428b6f4d"
+  instance_type = "t2.nano"
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+

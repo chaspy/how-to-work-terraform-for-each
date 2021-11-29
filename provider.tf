@@ -1,11 +1,13 @@
-provider "kubernetes" {
-  config_path    = "~/.kube/config"
-  config_context = "kind-terraform"
+provider "aws" {
+  region = "us-east-1"
 }
 
-provider "helm" {
-  kubernetes {
-    config_path    = "~/.kube/config"
-    config_context = "kind-terraform"
+terraform {
+  required_providers {
+    aws = {
+      region  = "ap-northeast-1"
+      source  = "hashicorp/aws"
+      version = "3.63.0"
+    }
   }
 }
