@@ -1,7 +1,7 @@
 data "aws_availability_zones" "all" {}
 
 resource "aws_autoscaling_group" "example" {
-  count = length(var.custom_tags)
+  count = length(var.data)
 
   launch_configuration = aws_launch_configuration.example.id
   availability_zones   = data.aws_availability_zones.all.names
@@ -14,9 +14,9 @@ resource "aws_autoscaling_group" "example" {
     for_each = toset(concat([
       {
         name  = "hoge"
-        value = "${var.custom_tags[count.index].name}:${var.custom_tags[count.index].value}"
+        value = "${var.data[count.index].name}:${var.data[count.index].user}"
       }
-    ], var.security_groups))
+    ], var.data[count.index].values))
     content {
       key                 = tag.value.name
       value               = tag.value.value

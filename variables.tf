@@ -1,17 +1,23 @@
-variable "custom_tags" {
+variable "data" {
   description = "Custom tags to set on the Instances in the ASG"
   type = list(object({
-    name  = string
-    value = string
+    name = string
+    user = string
+    values = list(object({
+      name  = string
+      value = string
+    }))
   }))
   default = [
     {
-      name  = "hoge"
-      value = "huga"
+      name   = "hoge"
+      user   = "huga"
+      values = []
     },
     {
-      name  = "foo"
-      value = "bar"
+      name   = "foo"
+      user   = "bar"
+      values = []
     }
   ]
 }
