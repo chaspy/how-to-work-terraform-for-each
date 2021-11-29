@@ -1,6 +1,8 @@
 data "aws_availability_zones" "all" {}
 
 resource "aws_autoscaling_group" "example" {
+  count = length(var.custom_tags)
+
   launch_configuration = aws_launch_configuration.example.id
   availability_zones   = data.aws_availability_zones.all.names
 

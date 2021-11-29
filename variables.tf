@@ -4,10 +4,16 @@ variable "custom_tags" {
     name  = string
     value = string
   }))
-  default = [{
-    name  = "hoge"
-    value = "huga"
-  }]
+  default = [
+    {
+      name  = "hoge"
+      value = "huga"
+    },
+    {
+      name  = "foo"
+      value = "bar"
+    }
+  ]
 }
 
 variable "security_groups" {
