@@ -11,7 +11,12 @@ resource "aws_autoscaling_group" "example" {
 
   # Use for_each to loop over var.custom_tags
   dynamic "tag" {
-    for_each = toset(concat(var.custom_tags, var.security_groups))
+    for_each = toset(concat([
+      {
+        name  = "hoge"
+        value = "${var.custom_tags[count.index].name}:${var.custom_tags[count.index].value}"
+      }
+    ], var.security_groups))
     content {
       key                 = tag.value.name
       value               = tag.value.value
