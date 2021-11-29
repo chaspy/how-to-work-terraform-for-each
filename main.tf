@@ -9,10 +9,10 @@ resource "aws_autoscaling_group" "example" {
 
   # Use for_each to loop over var.custom_tags
   dynamic "tag" {
-    for_each = var.custom_tags
+    for_each = toset(var.custom_tags)
     content {
-      key                 = tag.key
-      value               = tag.value
+      key                 = tag.value.name
+      value               = tag.value.value
       propagate_at_launch = true
     }
   }
@@ -26,4 +26,3 @@ resource "aws_launch_configuration" "example" {
     create_before_destroy = true
   }
 }
-
